@@ -1,0 +1,23 @@
+[
+  {
+    "story_id": 1,
+    "title": "Match Highlights",
+    "views": 1000,
+    "clicks": 200,
+    "completion_rate": 40
+  },
+  {
+    "story_id": 2,
+    "title": "Player Interview",
+    "views": 800,
+    "clicks": 50,
+    "completion_rate": 20
+  },
+  {
+    "story_id": 3,
+    "title": "Training Session",
+    "views": 500,
+    "clicks": 30,
+    "completion_rate": 15
+  }
+]
