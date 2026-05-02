@@ -1,9 +1,19 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import json
 from services.analyzer import analyze_story
 from services.debugger import debug_story
 
 app = FastAPI()
+
+# ✅ Enable CORS (allow frontend apps to call your API)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ⚠️ Change this in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def load_stories():
