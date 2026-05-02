@@ -51,6 +51,10 @@ def analyze_story(story):
     return {
         "story_id": story.get("story_id"),
         "title": story.get("title"),
+        "views": views,
+        "clicks": clicks,
+        "completion_rate": completion_rate,
+        "ctr": round((clicks / views) * 100, 1) if views > 0 else 0,
         "issues": issues,
         "priority_score": priority_score,
         "ai_feedback": ai_feedback

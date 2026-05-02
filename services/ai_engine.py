@@ -1,9 +1,23 @@
 import os
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+def get_client():
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    if not api_key:
+        return None  # 🔥 allows fallback instead of crashing
+
+    return OpenAI(api_key=api_key)
+
 
 def generate_ai_suggestion(story):
+    client = get_client()
+
+    # If no API key → use fallback immediately
+    if client is None:
+        return fallback_suggestion(story)
+
     prompt = f"""
     Analyze this story performance:
 
@@ -18,13 +32,17 @@ def generate_ai_suggestion(story):
     try:
         response = client.chat.completions.create(
             model="gpt-4.1-mini",
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{"role": "user", "content": prompt}],
+            timeout=10
         )
 
-        return response.choices[0].message.content
+        if response and response.choices:
+            return response.choices[0].message.content
 
-    except Exception:
-        # 🔥 fallback logic if API fails
+        return fallback_suggestion(story)
+
+    except Exception as e:
+        print(f"⚠️ AI Error: {e}")
         return fallback_suggestion(story)
 
 
@@ -39,12 +57,12 @@ def fallback_suggestion(story):
         issues.append("Users are dropping off early")
 
     if views > 0 and (clicks / views) < 0.1:
-        issues.append("Low engagement with CTA")
+        issues.append("Low engagement with call-to-action")
 
     if views < 600:
         issues.append("Low visibility")
 
     if not issues:
-        return "Story is performing well"
+        return "Story is performing well with no major issues detected."
 
-    return " | ".join(issues) + ". Consider improving structure and engagement."
+    return " | ".join(issues) + ". Consider improving structure, hook, and engagement strategy."

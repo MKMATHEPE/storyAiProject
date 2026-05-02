@@ -6,10 +6,9 @@ from services.debugger import debug_story
 
 app = FastAPI()
 
-# ✅ Enable CORS (allow frontend apps to call your API)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ⚠️ Change this in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,10 +29,7 @@ def home():
 def analyze():
     stories = load_stories()
     results = [analyze_story(story) for story in stories]
-
-    # 🔥 Sort by priority (highest first)
     results.sort(key=lambda x: x["priority_score"], reverse=True)
-
     return {"results": results}
 
 
@@ -57,7 +53,6 @@ def summary():
 @app.get("/debug/{story_id}")
 def debug(story_id: int):
     stories = load_stories()
-
     story = next((s for s in stories if s.get("story_id") == story_id), None)
 
     if not story:
